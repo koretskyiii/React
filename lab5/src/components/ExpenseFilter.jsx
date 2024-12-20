@@ -10,18 +10,21 @@ const ExpenseFilter = () => {
         setFilter(e.target.value)
     }
     return (
-        <Container sx={{ display: "flex", flexDirection: "row", alignItems: "center", mb: 2, mt: 2, justifyContent: "center" }}>
-          <Typography variant="h5" gutterBottom mr={2}>Filter by Category</Typography>
-          <FormControl>
-            <Select value={filter} onChange={handleFilterChange}>
-              <MenuItem value="all">All</MenuItem>
-              <MenuItem value="Food">Food</MenuItem>
-              <MenuItem value="Transport">Transport</MenuItem>
-              <MenuItem value="Entertainment">Entertainment</MenuItem>
-            </Select>
-          </FormControl>
-        </Container>
-      );
+      <Container sx={{ display: "flex", flexDirection: "row", alignItems: "center", mb: 2, mt: 2, justifyContent: "center" }}>
+        <Typography variant="h5" gutterBottom mr={2}>Filter by Category</Typography>
+        <FormControl>
+          <Select value={filter} onChange={handleFilterChange}>
+            <MenuItem value="all">All</MenuItem>
+            <MenuItem value="Food">Food</MenuItem>
+            <MenuItem value="Transport">Transport</MenuItem>
+            <MenuItem value="Entertainment">Entertainment</MenuItem>
+            <MenuItem value="Housing">Housing</MenuItem>
+            <MenuItem value="Health">Health</MenuItem>
+            <MenuItem value="Education">Education</MenuItem>
+          </Select>
+        </FormControl>
+      </Container>
+    );
 }
 
 export default ExpenseFilter;

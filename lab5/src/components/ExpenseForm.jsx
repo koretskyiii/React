@@ -80,6 +80,9 @@ const ExpenseForm = ({ expenseToEdit, onEditComplete }) => {
           <MenuItem value="Food">Food</MenuItem>
           <MenuItem value="Transport">Transport</MenuItem>
           <MenuItem value="Entertainment">Entertainment</MenuItem>
+          <MenuItem value="Housing">Housing</MenuItem>
+          <MenuItem value="Health">Health</MenuItem>
+          <MenuItem value="Education">Education</MenuItem>
         </Select>
         {error && <FormHelperText error>{error}</FormHelperText>}
       </FormControl>
