@@ -1,9 +1,9 @@
-import { createEvent, createStore } from 'effector'
+import { createEvent, createStore, sample } from 'effector'
 
-const addExpense = createEvent();
-const editExpense = createEvent();
+export const addExpense = createEvent();
+export const editExpense = createEvent();
 export const removeExpense = createEvent();
-const setFilter = createEvent();
+export const setFilter = createEvent();
 
 const initialExpenses = []
 const initialFilter = "all"
@@ -13,20 +13,32 @@ const $expences = createStore(initialExpenses)
   addExpense, (state, expense) => [...state, expense]
 )
 .on(editExpense, (state, updatedExpense) => {
-  state.map(expense => (
-    expense.id === updatedExpense.id ? updatedExpense : expense
+  return state.map(expense => (
+    expense.id === updatedExpense.id ? {...expense, ...updatedExpense}: expense
   ))
 })
 .on(removeExpense, (state, id) => state.filter(expense => expense.id !== id))
 
-$filter = createStore(initialFilter).on(setFilter, (_, category) => category)
+export const $filter = createStore(initialFilter).on(setFilter, (_, category) => category)
 
-export const $filteredExpenses = $expences.map((expences) => {
-  const filter = $filter.getState()
-  if (filter === "all") {
-    return expences
-  }
-  return expences.filter(expense => expense.category === filter)
+export const $filteredExpenses = createStore(initialExpenses)
+
+sample({
+  source: {expences : $expences, filter: $filter},
+  clock: [setFilter, editExpense, addExpense, removeExpense],
+  fn: ({expences, filter}) => 
+    {
+      if (filter == "all")
+        return expences.map(expense => expense)
+
+      return expences.filter(expense => expense.category === filter)
+    },
+    target: $filteredExpenses
 })
+addExpense.watch(expense => console.log('expense added', expense))
+removeExpense.watch(expense => console.log('expense removed', expense))
+editExpense.watch(expense => console.log('expense edited', expense))
+setFilter.watch(expense => console.log('filter changed', expense))
+// [setFilter, addExpense , editExpense, removeExpense].forEach(event => event.watch(() => console.log(event)))
 
-const $totalAmount = $expences.map(expences => expences.reduce((total, expense) => total + expense.amount, 0))
+export const $totalAmount = $expences.map(expences => expences.reduce((total, expense) => total + expense.amount, 0))
