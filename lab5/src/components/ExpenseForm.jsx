@@ -5,11 +5,12 @@ const ExpenseForm = ({ expenseToEdit, onEditComplete }) => {
     const [description, setDescription] = useState(expenseToEdit?.description || "");
     const [category, setCategory] = useState(expenseToEdit?.category || "");
     const [amount, setAmount] = useState(expenseToEdit?.amount || "");
+    const [funds, setFunds] = useState(expenseToEdit?.funds || "");
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!description.trim() || !category || !amount) {
+        if (!description.trim() || !category || !amount || !funds) {
             console.error("All fields are required.");
             return;
           }
@@ -18,6 +19,7 @@ const ExpenseForm = ({ expenseToEdit, onEditComplete }) => {
             id: expenseToEdit?.id || Date.now(),
             description: description,
             amount: parseFloat(amount),
+            funds: parseFloat(funds),
             category
           };
       
@@ -50,6 +52,13 @@ const ExpenseForm = ({ expenseToEdit, onEditComplete }) => {
             placeholder="Amount"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
+            required
+        />
+        <input
+            type="number"
+            placeholder="&#8372; funds"
+            value={funds}
+            onChange={(e) => setFunds(e.target.value)}
             required
         />
         <select value={category} onChange={(e) => setCategory(e.target.value)} required>
