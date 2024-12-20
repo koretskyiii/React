@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useStore } from "effector-react";
 import { $filteredExpenses, removeExpense } from "../store";
 import ExpenseForm from "./ExpenseForm";
+import { Button, Typography, Box, List, ListItem, ListItemText } from "@mui/material";
 
 const ExpenseList = () => {
   const expenses = useStore($filteredExpenses);
@@ -20,22 +21,41 @@ const ExpenseList = () => {
   };
 
   return (
-    <div>
-      <h2>Expenses</h2>
-      {expenses.map((expense) => (
-        <div key={expense.id}>
-          <span>{expense.description} - {expense.amount} * {expense.funds} ({expense.category})</span>
-          <button onClick={() => handleEdit(expense)}>Edit</button>
-          <button onClick={() => handleRemove(expense.id)}>Remove</button>
-        </div>
-      ))}
+    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 4 }}>
+      <Typography variant="h4" gutterBottom sx={{textAlign: "center"}}>
+        Expenses
+      </Typography>
+      <List sx={{ width: "75%" }}>
+        {expenses.map((expense) => (
+          <ListItem key={expense.id} sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+            <ListItemText
+              primary={`${expense.description} - ${expense.amount} * ${expense.funds} (${expense.category})`}
+            />
+            <Button
+              variant="outlined"
+              color="primary"
+              sx={{ marginRight: 1 }}
+              onClick={() => handleEdit(expense)}
+            >
+              Edit
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={() => handleRemove(expense.id)}
+            >
+              Remove
+            </Button>
+          </ListItem>
+        ))}
+      </List>
       {editingExpense && (
         <ExpenseForm
           expenseToEdit={editingExpense}
           onEditComplete={handleEditComplete}
         />
       )}
-    </div>
+    </Box>
   );
 };
 
