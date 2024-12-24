@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useStore } from "effector-react";
 import { $filteredExpenses, removeExpense } from "../store";
 import ExpenseForm from "./ExpenseForm";
-import { Button, Typography, Box, List, ListItem, ListItemText } from "@mui/material";
+import { Typography, Box, List, ListItem, ListItemText } from "@mui/material";
+import CustomButton from "./ui/CustomButton/CustomButton";
 
 const ExpenseList = () => {
   const expenses = useStore($filteredExpenses);
@@ -31,21 +32,9 @@ const ExpenseList = () => {
             <ListItemText
               primary={`${expense.description} - ${expense.amount} * ${expense.funds} (${expense.category})`}
             />
-            <Button
-              variant="outlined"
-              color="primary"
-              sx={{ marginRight: 1 }}
-              onClick={() => handleEdit(expense)}
-            >
-              Edit
-            </Button>
-            <Button
-              variant="outlined"
-              color="error"
-              onClick={() => handleRemove(expense.id)}
-            >
-              Remove
-            </Button>
+            <CustomButton submit={false} text="Edit" color="primary" handler={() => handleEdit(expense)}></CustomButton>
+
+            <CustomButton submit={false} text="Remove" color="error" handler={() => handleRemove(expense.id)}></CustomButton>
           </ListItem>
         ))}
       </List>

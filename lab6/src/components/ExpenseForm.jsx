@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { addExpense, editExpense } from "../store";
-import { Button, TextField, Select, MenuItem, InputLabel, FormControl, FormHelperText } from '@mui/material';
+import { TextField, InputLabel, FormControl, FormHelperText } from '@mui/material';
+import Selection from "./ui/Selection/Selection";
+import CustomButton from "./ui/CustomButton/CustomButton";
+import TextInput from "./ui/TextInput/TextInput";
 
 const ExpenseForm = ({ expenseToEdit, onEditComplete }) => {
   const [description, setDescription] = useState(expenseToEdit?.description || "");
@@ -22,7 +25,7 @@ const ExpenseForm = ({ expenseToEdit, onEditComplete }) => {
       description,
       amount: parseFloat(amount),
       funds: parseFloat(funds),
-      category
+      category,
     };
 
     if (expenseToEdit) {
@@ -41,54 +44,17 @@ const ExpenseForm = ({ expenseToEdit, onEditComplete }) => {
 
   return (
     <form onSubmit={handleSubmit} style={{ textAlign: "center" }}>
-      <TextField
-        label="Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        fullWidth
-        required
-        margin="normal"
-        sx={ {width: "25%"} }
-      />
-      <TextField
-        label="Amount"
-        type="number"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        fullWidth
-        required
-        margin="normal"
-        sx={ {width: "20%"} }
-      />
-      <TextField
-        label="Funds (₴)"
-        type="number"
-        value={funds}
-        onChange={(e) => setFunds(e.target.value)}
-        fullWidth
-        required
-        margin="normal"
-        sx={ {width: "20%"} }
-      />
-      <FormControl fullWidth required margin="normal" sx={ {width: "25%"} }>
+      
+      <TextInput width="25%" type="text" label="Description" value={description} onChangeHandler={(e) => setDescription(e.target.value)}></TextInput>
+      <TextInput width="20%" type="number" label="Amount" value={amount} onChangeHandler={(e) => setAmount(e.target.value)}></TextInput>
+      <TextInput width="20%" type="number" label="Funds (₴)" value={funds} onChangeHandler={(e) => setFunds(e.target.value)}></TextInput>
+
+      <FormControl fullWidth required margin="normal" sx={{ width: "25%" }}>
         <InputLabel>Category</InputLabel>
-        <Select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          label="Category"
-        >
-          <MenuItem value="Food">Food</MenuItem>
-          <MenuItem value="Transport">Transport</MenuItem>
-          <MenuItem value="Entertainment">Entertainment</MenuItem>
-          <MenuItem value="Housing">Housing</MenuItem>
-          <MenuItem value="Health">Health</MenuItem>
-          <MenuItem value="Education">Education</MenuItem>
-        </Select>
+        <Selection filter={category} onChangeHandler={(e) => setCategory(e.target.value)} label="Category"></Selection>
         {error && <FormHelperText error>{error}</FormHelperText>}
       </FormControl>
-      <Button variant="contained" type="submit" fullWidth sx={ {width: "75%"} }>
-        {expenseToEdit ? "Edit Expense" : "Add Expense"}
-      </Button>
+      <CustomButton submit={true} handler={handleSubmit} text = {expenseToEdit ? "Edit Expense" : "Add Expense"} color="primary"></CustomButton>
     </form>
   );
 };
