@@ -2,7 +2,6 @@ import React from "react";
 import { useStore } from "effector-react";
 import { $totalAmount, $totalFunds } from "../store";
 import { Container, Typography } from "@mui/material";
-
 const ExpenseSummary = () => {
     const totalAmount = useStore($totalAmount);
     const totalFunds = useStore($totalFunds);

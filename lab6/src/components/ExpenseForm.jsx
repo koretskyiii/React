@@ -1,31 +1,48 @@
-import React, { useState } from "react";
-import { addExpense, editExpense } from "../store";
-import { TextField, InputLabel, FormControl, FormHelperText } from '@mui/material';
-import Selection from "./ui/Selection/Selection";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { editExpense, addExpense } from "../store";
+import { FormControl, InputLabel, FormHelperText } from "@mui/material";
 import CustomButton from "./ui/CustomButton/CustomButton";
 import TextInput from "./ui/TextInput/TextInput";
+import Selection from "./ui/Selection/Selection";
 
-const ExpenseForm = ({ expenseToEdit, onEditComplete }) => {
-  const [description, setDescription] = useState(expenseToEdit?.description || "");
-  const [category, setCategory] = useState(expenseToEdit?.category || "");
-  const [amount, setAmount] = useState(expenseToEdit?.amount || "");
-  const [funds, setFunds] = useState(expenseToEdit?.funds || "");
-  const [error, setError] = useState("");
+const schema = yup.object().shape({
+  description: yup.string().required("Description is required."),
+  category: yup.string().required("Category is required."),
+  amount: yup
+    .number()
+    .required("Amount is required.")
+    .positive("Amount must be positive."),
+  funds: yup
+    .number()
+    .required("Funds are required.")
+    .positive("Funds must be positive."),
+});
+export const ExpenseForm = ({ expenseToEdit, onEditComplete }) => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+    setValue,
+  } = useForm({
+    defaultValues: {
+      description: expenseToEdit?.description || "",
+      category: expenseToEdit?.category || "",
+      amount: expenseToEdit?.amount || "",
+      funds: expenseToEdit?.funds || "",
+    },
+    resolver: yupResolver(schema),
+  });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!description.trim() || !category || !amount || !funds) {
-      setError("All fields are required.");
-      return;
-    }
-
+  const onSubmit = (data) => {
     const expense = {
       id: expenseToEdit?.id || Date.now(),
-      description,
-      amount: parseFloat(amount),
-      funds: parseFloat(funds),
-      category,
+      ...data,
+      amount: parseFloat(data.amount),
+      funds: parseFloat(data.funds),
     };
 
     if (expenseToEdit) {
@@ -35,26 +52,50 @@ const ExpenseForm = ({ expenseToEdit, onEditComplete }) => {
       addExpense(expense);
     }
 
-    setDescription("");
-    setAmount("");
-    setCategory("");
-    setFunds("");
-    setError(""); // Reset error after submission
+    reset();
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ textAlign: "center" }}>
-      
-      <TextInput width="25%" type="text" label="Description" value={description} onChangeHandler={(e) => setDescription(e.target.value)}></TextInput>
-      <TextInput width="20%" type="number" label="Amount" value={amount} onChangeHandler={(e) => setAmount(e.target.value)}></TextInput>
-      <TextInput width="20%" type="number" label="Funds (₴)" value={funds} onChangeHandler={(e) => setFunds(e.target.value)}></TextInput>
+    <form onSubmit={handleSubmit(onSubmit)} style={{ textAlign: "center" }}>
+        <TextInput
+          label="Description"
+          type="text"
+          width="25%"
+          register={register("description")}
+          errorMessage={errors.description?.message}
+        />
+        <TextInput
+          label="Amount"
+          type="number"
+          width="20%"
+          register={register("amount")}
+          errorMessage={errors.amount?.message}
+        />
+        <TextInput
+          label="Funds (₴)"
+          type="number"
+          width="20%"
+          register={register("funds")}
+          errorMessage={errors.funds?.message}
+        />
 
-      <FormControl fullWidth required margin="normal" sx={{ width: "25%" }}>
-        <InputLabel>Category</InputLabel>
-        <Selection filter={category} onChangeHandler={(e) => setCategory(e.target.value)} label="Category"></Selection>
-        {error && <FormHelperText error>{error}</FormHelperText>}
-      </FormControl>
-      <CustomButton submit={true} handler={handleSubmit} text = {expenseToEdit ? "Edit Expense" : "Add Expense"} color="primary"></CustomButton>
+        <FormControl sx={{ width: "20%" }} margin="normal" error={!!errors.category}>
+          <InputLabel>Category</InputLabel>
+          <Selection
+            value={setValue("category")}
+            onChangeHandler={(e) => setValue("category", e.target.value)}
+            label="Category"
+            error={errors.category}
+          />
+          {errors.category && <FormHelperText>{errors.category.message}</FormHelperText>}
+        </FormControl>
+
+        <CustomButton
+          submit={true}
+          handler={onEditComplete}
+          text={expenseToEdit ? "Edit Expense" : "Add Expense"}
+          color="primary"
+        />
     </form>
   );
 };

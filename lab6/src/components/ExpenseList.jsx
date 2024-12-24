@@ -33,7 +33,6 @@ const ExpenseList = () => {
               primary={`${expense.description} - ${expense.amount} * ${expense.funds} (${expense.category})`}
             />
             <CustomButton submit={false} text="Edit" color="primary" handler={() => handleEdit(expense)}></CustomButton>
-
             <CustomButton submit={false} text="Remove" color="error" handler={() => handleRemove(expense.id)}></CustomButton>
           </ListItem>
         ))}
