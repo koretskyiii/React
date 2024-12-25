@@ -6,11 +6,11 @@ const Selection = ({ value, label, onChangeHandler, error }) => {
 
   return (
     <Select
+      defaultValue={value? value : 'all'}
       value={value}
       onChange={onChangeHandler}
       label={label}
       error={!!error}
-      defaultValue={"all"}
     >
       <MenuItem value="all">All</MenuItem>
       <MenuItem value="Food">Food</MenuItem>

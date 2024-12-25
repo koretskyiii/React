@@ -39,7 +39,6 @@ addExpense.watch(expense => console.log('expense added', expense))
 removeExpense.watch(expense => console.log('expense removed', expense))
 editExpense.watch(expense => console.log('expense edited', expense))
 setFilter.watch(expense => console.log('filter changed', expense))
-// [setFilter, addExpense , editExpense, removeExpense].forEach(event => event.watch(() => console.log(event)))
 
 export const $totalAmount = $expences.map(expences => expences.reduce((total, expense) => total + expense.amount, 0))
 export const $totalFunds = $expences.map(expences => expences.reduce((total, expense) => total + expense.funds * expense.amount, 0))

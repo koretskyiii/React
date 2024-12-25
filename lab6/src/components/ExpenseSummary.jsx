@@ -5,6 +5,7 @@ import { Container, Typography } from "@mui/material";
 const ExpenseSummary = () => {
     const totalAmount = useStore($totalAmount);
     const totalFunds = useStore($totalFunds);
+    
     return (
         <Container border={1} sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between", mt: 4 }}  >
           <Typography variant="h5">Total Amount: <span style={{ color: "purple" }}>{totalAmount}</span></Typography >

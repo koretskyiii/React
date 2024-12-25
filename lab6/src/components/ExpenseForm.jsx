@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { editExpense, addExpense } from "../store";
@@ -27,6 +27,7 @@ export const ExpenseForm = ({ expenseToEdit, onEditComplete }) => {
     reset,
     formState: { errors },
     setValue,
+    control
   } = useForm({
     defaultValues: {
       description: expenseToEdit?.description || "",
@@ -53,6 +54,7 @@ export const ExpenseForm = ({ expenseToEdit, onEditComplete }) => {
     }
 
     reset();
+    setValue("category", 'All', { shouldValidate: true });
   };
 
   return (
@@ -81,11 +83,14 @@ export const ExpenseForm = ({ expenseToEdit, onEditComplete }) => {
 
         <FormControl sx={{ width: "20%" }} margin="normal" error={!!errors.category}>
           <InputLabel>Category</InputLabel>
+          <Controller name="category" control={control}
+          render={({ field }) => 
           <Selection
-            value={setValue("category")}
-            onChangeHandler={(e) => setValue("category", e.target.value)}
+            value={field.value}
+            onChangeHandler={(e) => field.onChange(e.target.value)}
             label="Category"
             error={errors.category}
+          />}  
           />
           {errors.category && <FormHelperText>{errors.category.message}</FormHelperText>}
         </FormControl>
