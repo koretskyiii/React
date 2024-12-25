@@ -24,3 +24,7 @@
 
 > Посилання на Readme з відео -> [link](https://github.com/koretskyiii/React/blob/main/lab5/README.md)
 
+## Практична №6 - Контекст, мемоїзація. Організація коду
+> Виконано -> [link](https://github.com/koretskyiii/React/blob/main/lab6)
+
+> Посилання на Readme з відео -> [link](https://github.com/koretskyiii/React/blob/main/lab6/README.md)
